@@ -1,0 +1,176 @@
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="lib/d3/d3.js"></script>
+    <script src="lib/d3/d3.layout.cloud.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.js"></script>
+    <script>
+       
+    </script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+<center><h1>Biểu Đồ Cây Ở SanFran Cisco</h1><center>
+  <p>
+  <form name=frmTest action="" method=GET >
+  <p>
+  Chọn kích cỡ
+  <select name=ComboName size=1 id='combo1' >
+    <option value="0" SELECTED>No filter
+    <option value="3X3">3x3
+    <option value="3X4">3x4
+    <option value="4X4">4x4
+   
+  </select>
+  Chọn giống
+ <select name=ComboName1 size=1 id='combo2'>
+    <option value="0" SELECTED>No Filter
+    <option value="Lophostemon confertus :: Brisbane Box">Lophostemon confertus :: Brisbane Box
+    <option value="Magnolia grandiflora :: Southern Magnolia">Magnolia grandiflora :: Southern Magnolia
+    <option value="Fraxinus americana :: American Ash">Fraxinus americana :: American Ash
+   <option value="Eucalyptus Spp :: Eucalyptus">Eucalyptus Spp :: Eucalyptus
+  </select>
+
+
+  </p>
+<input type="button" value="Lọc" onclick="query()">
+</form>
+
+  </p>
+    <script>
+   
+     // var svg = d3.select("body").append("svg").attr("width",250).attr("height",250);
+       // function render(data){
+           // var circles = svg.selectAll("circle").data(data);
+            //circles.enter().append("circle").attr("r",10);
+
+           // circles
+           // .attr("cx",function(d){return d.x;})
+           // .attr("cy",function(d){return d.y;});
+           // circles.exit().remove();
+       // }
+
+       // var MyArr = [
+        //{x:100,y:100},
+       // {x:130,y:120},
+        //{x:100,y:180},
+        //{x:60,y:150},
+       // {x:70,y:120},
+       // ];
+       // render(MyArr);
+       // Set up size 
+       // Set up size 
+var width = 750,    
+height = width;  
+// Set up projection that map is using 
+var projection = d3.geo.mercator()  
+ .center([-122.433701, 37.767683]) 
+// San Francisco, roughly   
+ .scale(225000)     
+ .translate([width / 2, height / 2]); 
+// This is the mapping between <longitude, latitude> position to <x, y> pixel position on the map 
+//projection([lon, lat]) returns ([x, y]) ;
+//projection.invert([x, y]) returns ([lon, lat])  ;
+// Add an svg element3s to the DOM 
+var svg = d3.select("body").append("svg")    
+ .attr("width", width)  
+ .attr("height", height);  
+// Add svg map at correct size, assumes map is saved in a subdirectory called "data" 
+svg.append("image")   
+ .attr("xlink:href", "SanFranciscoCityWeb-Illustrator.svg")      
+ .attr("width", width)           
+ .attr("height", height)          
+ 
+  aa = [-122.3926894
+, 37.72954822
+];
+    bb = [-122.4250636
+, 37.80304673
+];
+
+    console.log(projection(aa),projection(bb));
+    function type(d){
+        d.Longitude =    +d.Longitude;
+        d.Latitude =   +d.Latitude;
+        return d;
+    }
+  
+    var ball = [];
+   d3.csv('trees.csv',type,function(data){
+    //ball = data.map(function(d) { return [ +d["x"], +d["y"] ]; });
+   // data.foreach(function(d){
+      //  d.Longitude =  +d.Longitude;
+     //   d.Latitude = +d.Latitude;
+        
+    //});
+    //console.log(ball);
+     svg.selectAll("circle")
+        .data(data).enter()
+        .append("circle")
+       // .attr("cx", function (d) { console.log(projection(d)); return projection(d[0]); })
+        //.attr("cy", function (d) { return projection(d[1]); })
+        .attr("cx", function (d) {  return projection([d.Longitude,d.Latitude])[0]; })
+        .attr("cy", function (d) { return projection([d.Longitude,d.Latitude])[1]; })
+        .attr("r", "2px")
+        .attr("fill", "red")
+    }
+);
+
+  // d3.select("#sanfran").append("img")  
+   // .attr("src","SanFranciscoCityWeb-Illustrator.svg")
+   // .attr("width", 750)
+   // .attr("height", 750)
+   function query(){
+    $('svg').remove();
+    var projection = d3.geo.mercator()  
+     .center([-122.433701, 37.767683]) 
+    // San Francisco, roughly   
+     .scale(225000)     
+     .translate([width / 2, height / 2]); 
+    // This is the mapping between <longitude, latitude> position to <x, y> pixel position on the map 
+    //projection([lon, lat]) returns ([x, y]) ;
+    //projection.invert([x, y]) returns ([lon, lat])  ;
+    // Add an svg element3s to the DOM 
+    var svg = d3.select("body").append("svg")    
+     .attr("width", width)  
+     .attr("height", height);  
+     svg.append("image")   
+     .attr("xlink:href", "SanFranciscoCityWeb-Illustrator.svg")      
+     .attr("width", width)           
+     .attr("height", height)   
+
+        d3.csv('trees.csv',type,function(data){
+    //ball = data.map(function(d) { return [ +d["x"], +d["y"] ]; });
+   // data.foreach(function(d){
+      //  d.Longitude =  +d.Longitude;
+     //   d.Latitude = +d.Latitude;
+        
+    //});
+    
+
+    //console.log(ball);
+  
+     svg.selectAll("circle")
+        .data(data).enter()
+        .append("circle")
+        //.attr("cx", function (d) { if(){console.log(projection(d));} else {return projection(d[0]);} })
+        //.attr("cy", function (d) { return projection(d[1]); })
+        .attr("cx", function (d) {if((($('#combo1').val()=="0") || (d.PlotSize == $('#combo1').val())) && (($('#combo2').val()=="0") || (d.qSpecies == $('#combo2').val())))  {return projection([d.Longitude,d.Latitude])[0];} else {return 0;} })
+        .attr("cy", function (d) { if((($('#combo1').val()=="0") || (d.PlotSize == $('#combo1').val())) && (($('#combo2').val()=="0") || (d.qSpecies == $('#combo2').val())) ) {return projection([d.Longitude,d.Latitude])[1];} else {return 0;} })
+        .attr("r", "2px")
+        .attr("fill", "red")
+      
+       
+
+    }
+);
+     console.log($('#combo1').val());
+   }
+
+    </script>
+</body>
+
+</html>
